@@ -1,0 +1,62 @@
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<script type="text/javascript" src="form.js"></script>
+
+		<script type="text/javascript">
+			window.onload = function () {
+				var form = new Form({
+					id : 'formId',
+					before : function () {
+						alert('before');
+					},
+					after: function () {
+						alert('after');
+					},
+					rules : {
+						name : {
+							required: {error: 'This field is required'},
+							alpha: {error: ''}
+						},
+						lastname : {
+							required: {error: 'Обязательно к заполнению'}
+						}
+					},
+					fails : function (fields) {
+						console.log(fields);
+					}
+				});
+			};
+		</script>
+	</head>
+
+	<body>
+		<form action="request.php" method="post" id="formId">
+			Name : <input type="text" name="name"><br>
+			Lastname: <input type="text" name="lastname"><br><br>
+
+			<input type="checkbox" name="check"> I like it<br>
+
+			<input type="radio" name="radio" value="1"> Value 1
+			<input type="radio" name="radio" value="2">	Value 2
+			<input type="radio" name="radio" value="3">	Value 3
+
+			<br>
+			<select name="list">
+				<option value="1">item 1</option>
+				<option value="2">item 2</option>
+				<option value="3">item 3</option>
+			</select>
+			<br>
+
+			<input type="checkbox" name="chb[0]">Agree
+			<input type="checkbox" name="chb[1]">I'am 18
+			<input type="checkbox" name="chb[2]">Subscribe to news
+
+			<input type="submit">
+		</form>
+	</body>
+</html>
+
