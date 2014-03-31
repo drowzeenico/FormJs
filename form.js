@@ -110,12 +110,12 @@
 
 			iam.getData();
 
+			iam.before();
+
 			// validate form data by the rules
 			if(iam.rules != null && iam.validate() == false) {
 				return iam.fails(iam.errorFields);
 			}
-
-			iam.before();
 
 			iam.send();
 
