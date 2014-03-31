@@ -5,41 +5,20 @@
 
 	var Form = function ( options ) {
 
-		// jquery form object
-		this.formObject = null;
-
-		//form id
-		this.id = null;
-
-		// form method
-		this.method = 'GET';
-
-		//form action
-		this.action = null;
-
-		// form status
-		this.valid = true;
-
-		// validation rules
-		this.rules = null;
-
+		this.formObject = null; // jquery form object
+		this.id = null; //form id
+		this.method = 'GET'; // form method
+		this.action = null; //form action
+		this.valid = true; // form status
+		this.rules = null; // validation rules
 		this.error = '';
+		this.data = null; // unserialized form data
+		this.errorFields = {}; // errorfields
 
-		this.data = null;
-
-		this.errorFields = {};
-
-		// call this before send
-		this.before = function () {};
-
-		// call this after send
-		this.after = function () {};
-
-		// success request handler
-		this.success = function () {};
-
-		// if form is not valid
-		this.fails = function () {};
+		this.before = function () {}; // call this before send
+		this.after = function () {}; // call this after send
+		this.success = function () {}; // success request handler
+		this.fails = function () {}; // if form is not valid
 
 		// calling constructor
 		this.init( options );
@@ -48,12 +27,10 @@
 	// validation types
 	Form.prototype.types = {
 		alpha: function (value) {
-			var regexp = /^[A-ZА-Я]+$/i;
-			return regexp.test(value);
+			return /^[A-ZА-Я]+$/i.test(value);
 		},
 		alphanum: function (value) {
-			var regexp = /^[0-9A-ZА-Я]+$/i;
-			return regexp.test(value);
+			return /^[0-9A-ZА-Я]+$/i.test(value);
 		},
 		int : function (n) {
 			return n == parseInt(n, 10);
@@ -109,7 +86,6 @@
 			event.preventDefault();
 
 			iam.getData();
-
 			iam.before();
 
 			// validate form data by the rules
@@ -134,10 +110,11 @@
 		this.data = this.unserialize(formData);
 	};
 
-	// fend form
+	// send form
 	Form.prototype.send = function () {
 		this.method = this.formObject.attr('method') || this.method;
 		this.action = this.formObject.attr('action');
+		var iam = this;
 
 		if(this.method && this.action) {
 			var requestMethod = (this.method).toLowerCase();
@@ -145,7 +122,10 @@
 				return console.log('Error: ' +requestMethod+' method is undefined');
 
 			$[requestMethod](this.action, this.data, function(response) {
-				console.log(response);
+				if(response.valid == false || response.valid == undefined)
+					iam.fails(response);
+				else
+					iam.success(response);
 			}, 'json');
 		}
 		else
